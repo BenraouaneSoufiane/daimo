@@ -77,7 +77,6 @@ async function main() {
   const foreignCoinIndexer = new ForeignCoinIndexer(nameReg, vc, tokenReg);
 
   const homeCoinIndexer = new HomeCoinIndexer(
-    vc,
     opIndexer,
     noteIndexer,
     requestIndexer,

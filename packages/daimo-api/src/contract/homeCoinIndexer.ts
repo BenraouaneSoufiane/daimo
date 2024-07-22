@@ -18,7 +18,6 @@ import { RequestIndexer } from "./requestIndexer";
 import { SwapClogMatcher } from "./SwapClogMatcher";
 import { DB as ShovelDB } from "../codegen/dbShovel";
 import { chainConfig } from "../env";
-import { ViemClient } from "../network/viemClient";
 import { PaymentMemoTracker } from "../offchain/paymentMemoTracker";
 import { retryBackoff } from "../utils/retryBackoff";
 
@@ -42,7 +41,6 @@ export class HomeCoinIndexer extends Indexer {
   private listeners: ((transfers: Transfer[]) => void)[] = [];
 
   constructor(
-    private client: ViemClient,
     private opIndexer: OpIndexer,
     private noteIndexer: NoteIndexer,
     private requestIndexer: RequestIndexer,
@@ -54,7 +52,8 @@ export class HomeCoinIndexer extends Indexer {
   }
 
   public status() {
-    return { numTransfers: this.allTransfers.length };
+    const { lastProcessedBlock } = this;
+    return { numTransfers: this.allTransfers.length, lastProcessedBlock };
   }
 
   async load(pg: Pool, kdb: Kysely<ShovelDB>, from: number, to: number) {
